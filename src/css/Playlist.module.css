@@ -1,0 +1,39 @@
+.playlistBox {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 20px;
+    width: 400px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .playlistContainer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+.playlistNameInput {
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #333; 
+    color: #ffffff;
+}
+
+.playlistName {
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.saveButton {
+    background-color: #00e0ff;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1em;
+    width: 100%;
+}

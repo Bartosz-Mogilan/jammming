@@ -1,0 +1,24 @@
+
+.Track {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.addButton,
+.removeButton {
+  background-color: #00e0ff;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover,
+.removeButton:hover {
+  background-color: #0091b5; 
+}

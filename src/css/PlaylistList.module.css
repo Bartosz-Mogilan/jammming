@@ -1,0 +1,11 @@
+.playlistListContainer {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  
+  .playlistListContainer h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  

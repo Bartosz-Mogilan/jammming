@@ -1,0 +1,11 @@
+.playlistItem {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+  }
+  
+  .playlistItem:hover {
+    background-color: #f0f0f0;
+  }
+  
+  
