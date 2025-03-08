@@ -3,13 +3,17 @@ import Spotify from "../Spotify/spotify";
 import PlaylistListItem from "../PlaylistListItem/PlaylistListItem";
 import styles from "../../css/PlaylistList.module.css"
 
-function PlaylistList ({onSelectPlaylist}) {
+function PlaylistList ({ onSelectPlaylist }) {
     const [playlists, setPlaylists] = useState([]);
 
     useEffect(() => {
         const fetchPlaylists = async () => {
-            const userPlaylists = await Spotify.getUserPlaylists();
-            setPlaylists(userPlaylists);
+            try {
+                const userPlaylists = await Spotify.getUserPlaylists();
+                setPlaylists(userPlaylists);
+            } catch(error) {
+                console.error("Error fetching playlists", error);
+            }
         };
         fetchPlaylists();
     }, []);
@@ -26,7 +30,7 @@ function PlaylistList ({onSelectPlaylist}) {
                 />
             ))}
         </div>
-    )
+    );
 }
 
 export default PlaylistList;

@@ -5,15 +5,15 @@ function Track({id, name, artist, album, uri, preview_url, addTrackToPlaylist, r
 
 const handleAddTrack = () => {
     if(typeof addTrackToPlaylist === "function") {
-        addTrackToPlaylist({id, name, artist, album, uri, preview_url});
+        addTrackToPlaylist({ id, name, artist, album, uri, preview_url });
     } else {
         console.error('addTrackToPlaylist is not a function')
     }
 };
 
 const handleRemoveTrack = () => {
-    if (removeTrackFromPlaylist) {
-        removeTrackFromPlaylist({id, name, artist, album, uri});
+    if (typeof removeTrackFromPlaylist === "function") {
+        removeTrackFromPlaylist({ id, name, artist, album, uri });
     }
 };
 
@@ -29,7 +29,7 @@ return (
                     Your browser does not support the audio element
                 </audio>
             )}
-            {removeTrackFromPlaylist ? (
+            {typeof removeTrackFromPlaylist === "function" ? (
                 <button className={styles.removeButton} onClick={handleRemoveTrack}>
                     Remove
                 </button>

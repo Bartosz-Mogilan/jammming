@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import styles from "../../css/SearchBar.module.css"
-import Spotify from "../Spotify/spotify";
 
-function SearchBar({onSearchResults}) {
-    const [searchTerm, setSearchTerm] = useState('');
+function SearchBar({ onSearchSubmit, searchTerm: initialSearchTerm }) {
+    const [searchTerm, setSearchTerm] = useState(initialSearchTerm || "");
 
     const handleSearchChange = (event) => {
         const value = event.target.value;
         setSearchTerm(value);
-        onSearchResults(value);
     }
 
     const handleSearchSubmit = async (event) => {
@@ -18,15 +16,13 @@ function SearchBar({onSearchResults}) {
             return;
         }
         try {
-        const results = await Spotify.searchTracks(searchTerm);
-        onSearchResults(results);
+            onSearchSubmit(searchTerm);
         } catch(error) {
             console.log("Error fetching search results", error);
             alert("Failed to fetch results. Please try again");
         }
-    }
+    };
 
-    
     return (
         <div className={styles.searchBarContainer}>
             <form className ={styles.searchForm} onSubmit={handleSearchSubmit}>
@@ -38,9 +34,7 @@ function SearchBar({onSearchResults}) {
                 onChange={handleSearchChange}
                 />
                 <button className={styles.searchButton} type="submit">Search</button>
-                
             </form>
-            
         </div>
     );
 }

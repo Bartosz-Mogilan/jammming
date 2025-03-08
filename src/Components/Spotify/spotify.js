@@ -57,7 +57,7 @@ const Spotify = {
 
     const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
       headers: {
-        Authorization: `Bearer ${token}`, // changed from this.getAccessToToken incase something does not work
+        Authorization: `Bearer ${token}`
       },
     });
   console.log("Response status for getUserPlaylists:", response.status);
@@ -66,7 +66,7 @@ const Spotify = {
     }
 
     const data = await response.json();
-    return data.items.map(playlist => ({
+    return data.items.map((playlist) => ({
       id: playlist.id,
       name: playlist.name
     }));
@@ -89,10 +89,10 @@ const Spotify = {
     }
 
     const data = await response.json();
-    return data.items.map(item => ({
+    return data.items.map((item) => ({
       id: item.track.id,
       name: item.track.name,
-      artist: item.track.artists.map(artist => artist.name).join(", "), 
+      artist: item.track.artists.map((artist) => artist.name).join(", "), 
       album: item.track.album.name,
       uri: item.track.uri,
     }));
@@ -124,7 +124,7 @@ const Spotify = {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ name: playlistName}),
+          body: JSON.stringify({ name: playlistName }),
         });
         playlistId = id;
       } else {
@@ -138,7 +138,8 @@ const Spotify = {
             name: playlistName,
             public: true,
           }),
-        });
+        }
+      );
 
         if (!createPlaylistResponse.ok) {
           console.log("Error creating playlist:", await createPlaylistResponse.text());
@@ -158,7 +159,8 @@ const Spotify = {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ uris: trackURIs }),
-      });
+      }
+    );
 
       if (!addTracksResponse.ok) {
         console.log("Error adding tracks", await addTracksResponse.text());
@@ -188,7 +190,8 @@ const Spotify = {
         headers: { 
           Authorization: `Bearer ${token}` 
         },
-      });
+      }
+    );
       
       const data = await response.json();
       if(!data.tracks || !data.tracks.items) {
@@ -202,10 +205,10 @@ const Spotify = {
         throw new Error(`Failed to fetch results: ${response.statusText}`);
       }
 
-       return data.tracks.items.map(track => ({
+       return data.tracks.items.map((track) => ({
         id: track.id,
         name: track.name,
-        artist: track.artists.map(artist => artist.name).join(", "),
+        artist: track.artists.map((artist) => artist.name).join(", "),
         album: track.album.name,
         uri: track.uri,
       }));
@@ -213,8 +216,7 @@ const Spotify = {
       console.error("Error searching tracks:", error);
       return []; 
     }
-    
-    }
+  },
 };
 
  
