@@ -31,7 +31,7 @@ async function handleSavePlaylist() {
         return;
     }
     
-    const trackURIs = tracks.map(track => track.uri). filter(uri => uri);
+    const trackURIs = tracks.map(track => track.uri).filter(uri => uri);
     if(trackURIs.length === 0) {
         console.error("No valid track URIs found", trackURIs);
         return;

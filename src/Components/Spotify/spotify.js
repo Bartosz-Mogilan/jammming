@@ -23,7 +23,7 @@ const Spotify = {
       console.log("Access token obtained", accessToken);
       return accessToken;
     } else {
-      const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`;
+      const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public%20playlist-read-private%20user-read-private&redirect_uri=${encodeURIComponent(redirectUri)}`;
       window.location = accessUrl;
     }
   },
@@ -32,12 +32,16 @@ const Spotify = {
 
   async getCurrentUserId() {
     const token = this.getAccessToken();
+    console.log("Using token for getCurrentUser:", token);
+
     const response = await fetch('https://api.spotify.com/v1/me', {
       headers: { 
         Authorization: `Bearer ${token}`
       },
     });
+    console.log("Response status for getCurrentUserId:", response.status);
     if(!response.ok) {
+      console.log("Error details:", await response.text())
       throw new Error("Failed to fetch ID");
     }
     const data = await response.json();
@@ -48,12 +52,15 @@ const Spotify = {
 
   async getUserPlaylists() {
     const userId = await this.getCurrentUserId();
+    const token = this.getAccessToken();
+    console.log("Using toekn for getUserPlaylist:", token);
+
     const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
       headers: {
-        Authorization: `Bearer ${this.getAccessToken()}`,
+        Authorization: `Bearer ${token}`, // changed from this.getAccessToToken incase something does not work
       },
     });
-
+  console.log("Response status for getUserPlaylists:", response.status);
     if (!response.ok) {
       throw new Error("Failed to fetch user playlists");
     }
@@ -65,15 +72,19 @@ const Spotify = {
     }));
   },
 
+//Getting tracks in a playlist
   async getPlaylist(id) {
     const token = this.getAccessToken();
+    console.log("Using token for getPlaylist:", token);
+
     const response = await fetch(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
       headers: { 
         Authorization: `Bearer ${token}` 
       },
     });
-
+ console.log("Response status for getPlaylist:", response.status);
     if (!response.ok) {
+      console.log("Error details:", await response.text());
       throw new Error("Could not fetch playlist tracks");
     }
 
@@ -130,6 +141,7 @@ const Spotify = {
         });
 
         if (!createPlaylistResponse.ok) {
+          console.log("Error creating playlist:", await createPlaylistResponse.text());
           throw new Error("Failed to create playlist");
         }
 
@@ -149,6 +161,7 @@ const Spotify = {
       });
 
       if (!addTracksResponse.ok) {
+        console.log("Error adding tracks", await addTracksResponse.text());
         throw new Error("Failed to add tracks to playlist");
       }
 
@@ -164,6 +177,7 @@ const Spotify = {
 
   async searchTracks(query) {
     const token = await this.getAccessToken();
+    console.log("Searching for query", query);
     if (!token) {
       alert("Spotify access token missing. Please log in again.");
       return [];
@@ -175,15 +189,17 @@ const Spotify = {
           Authorization: `Bearer ${token}` 
         },
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch results: ${response.statusText}`);
-      }
+      
       const data = await response.json();
       if(!data.tracks || !data.tracks.items) {
         console.error("No tracks found", data)
         return [];
 
+      }
+
+      if (!response.ok) {
+        console.log("Error details:", await response.text());
+        throw new Error(`Failed to fetch results: ${response.statusText}`);
       }
 
        return data.tracks.items.map(track => ({
@@ -197,8 +213,12 @@ const Spotify = {
       console.error("Error searching tracks:", error);
       return []; 
     }
-  },
+    
+    }
 };
 
  
 export default Spotify;
+
+
+ 
