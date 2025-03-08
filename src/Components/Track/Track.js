@@ -6,10 +6,14 @@ function Track({id, name, artist, album, uri, preview_url, addTrackToPlaylist, r
     const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
     const audioRef = useRef(null);
 
+    console.log(`Track: ${name}, Preview URL: ${preview_url}`);
+
     const togglePreview = () => {
-        if (!audioRef.current) return;
+        if (!preview_url || !audioRef.current) return;
         if(!isPreviewPlaying) {
-            audioRef.current.play();
+            audioRef.current.play().catch(error => {
+                console.error("Audio playback failed:", error);
+            });
             setIsPreviewPlaying(true);
         } else {
             audioRef.current.pause();
@@ -18,12 +22,12 @@ function Track({id, name, artist, album, uri, preview_url, addTrackToPlaylist, r
     };
 
     useEffect(() => {
-        const audio = audioRef.current;
-        if(audio) {
+        const audioElement = audioRef.current;
+        if(audioElement) {
             const handleEnded = () => setIsPreviewPlaying(false);
-            audio.addEventListener("ended", handleEnded);
+            audioElement.addEventListener("ended", handleEnded);
             return () => {
-                audio.removeEventListener("ended", handleEnded);
+                audioElement.removeEventListener("ended", handleEnded);
             };
         }
     }, []);
@@ -46,31 +50,37 @@ const handleRemoveTrack = () => {
 
 
 return (
-        <div className={styles.Track}>
-            <div className={styles.trackDetails}> 
-            <h3>{name}</h3>
-            <p>{artist}</p>
-            <p>{album}</p>
-            {preview_url && (
-                <div className={styles.previewContainer}>
-                    <button onClick={togglePreview} className={styles.previewButton}>
-                        {isPreviewPlaying ? "Pause Preview" : "Play Preview"}
-                    </button>
-                    <audio ref={audioRef} src={preview_url} style={{ display: "none"}} />
-                </div>
-            )}
-            {isRemoval ? (
-                <button className={styles.removeButton} onClick={handleRemoveTrack}>
-                    Remove
-                </button>
-            ) : (
-                <button className={styles.addButton} onClick={handleAddTrack}>
-                Add to Playlist
+    <div className={styles.Track}>
+    <div className={styles.trackDetails}>
+      <h3>{name}</h3>
+      <p>{artist}</p>
+      <p>{album}</p>
+      <div className={styles.previewContainer}>
+        {preview_url ? (
+          <>
+            <button onClick={togglePreview} className={styles.previewButton} disabled={!preview_url}>
+              {preview_url ? (isPreviewPlaying ? "Pause Preview" : "Play Preview") : "No Preview Available"}
             </button>
-            )}
-            </div>
-        </div>
-    );
+            {preview_url && <audio ref={audioRef} src={preview_url} style={{ display: "none" }} />}
+          </>
+        ) : (
+          <button className={styles.previewButton} disabled>
+            No Preview
+          </button>
+        )}
+      </div>
+      {isRemoval ? (
+        <button className={styles.removeButton} onClick={handleRemoveTrack}>
+          Remove
+        </button>
+      ) : (
+        <button className={styles.addButton} onClick={handleAddTrack}>
+          Add to Playlist
+        </button>
+      )}
+    </div>
+  </div>
+);
 }
 
 export default Track;

@@ -227,6 +227,7 @@ const Spotify = {
         artist: track.artists.map((artist) => artist.name).join(", "),
         album: track.album.name,
         uri: track.uri,
+        preview_url: track.preview_url,
       }));
     } catch (error) {
       console.error("Error searching tracks:", error);
