@@ -1,7 +1,32 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "../../css/Track.module.css";
 
 function Track({id, name, artist, album, uri, preview_url, addTrackToPlaylist, removeTrackFromPlaylist, isRemoval }) {
+
+    const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
+    const audioRef = useRef(null);
+
+    const togglePreview = () => {
+        if (!audioRef.current) return;
+        if(!isPreviewPlaying) {
+            audioRef.current.play();
+            setIsPreviewPlaying(true);
+        } else {
+            audioRef.current.pause();
+            setIsPreviewPlaying(false);
+        }
+    };
+
+    useEffect(() => {
+        const audio = audioRef.current;
+        if(audio) {
+            const handleEnded = () => setIsPreviewPlaying(false);
+            audio.addEventListener("ended", handleEnded);
+            return () => {
+                audio.removeEventListener("ended", handleEnded);
+            };
+        }
+    }, []);
 
 const handleAddTrack = () => {
     if(typeof addTrackToPlaylist === "function") {
@@ -27,10 +52,12 @@ return (
             <p>{artist}</p>
             <p>{album}</p>
             {preview_url && (
-                <audio controls>
-                    <source src={preview_url} type="audio/mpeg" />
-                    Your browser does not support the audio element
-                </audio>
+                <div className={styles.previewContainer}>
+                    <button onClick={togglePreview} className={styles.previewButton}>
+                        {isPreviewPlaying ? "Pause Preview" : "Play Preview"}
+                    </button>
+                    <audio ref={audioRef} src={preview_url} style={{ display: "none"}} />
+                </div>
             )}
             {isRemoval ? (
                 <button className={styles.removeButton} onClick={handleRemoveTrack}>

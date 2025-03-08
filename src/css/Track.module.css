@@ -1,24 +1,61 @@
-
 .Track {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  border-bottom: 1px solid #333;
+  padding: 10px 0;
 }
+
+
+.trackDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.trackDetails h3 {
+  margin: 0;
+  color: #00e0ff; 
+}
+
+.trackDetails p {
+  margin: 2px 0;
+}
+
+
+.previewContainer {
+  margin: 10px 0;
+}
+
+
+.previewButton {
+  background-color: transparent;
+  border: 2px solid #00e0ff;
+  color: #00e0ff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 1em;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.previewButton:hover {
+  background-color: #00e0ff;
+  color: #121212;
+  box-shadow: 0 0 8px #00e0ff;
+}
+
 
 .addButton,
 .removeButton {
+  margin-top: 10px;
   background-color: #00e0ff;
-  color: #000;
   border: none;
+  color: #121212;
+  padding: 8px 16px;
   border-radius: 4px;
-  padding: 8px 12px;
-  transition: background-color 0.3s ease;
+  font-size: 1em;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .addButton:hover,
 .removeButton:hover {
-  background-color: #0091b5; 
+  background-color: #00e0ff;
+  box-shadow: 0 0 8px #00e0ff;
 }
