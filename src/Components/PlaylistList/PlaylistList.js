@@ -5,6 +5,7 @@ import styles from "../../css/PlaylistList.module.css"
 
 function PlaylistList ({ onSelectPlaylist }) {
     const [playlists, setPlaylists] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchPlaylists = async () => {
@@ -13,6 +14,8 @@ function PlaylistList ({ onSelectPlaylist }) {
                 setPlaylists(userPlaylists);
             } catch(error) {
                 console.error("Error fetching playlists", error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchPlaylists();
@@ -21,15 +24,21 @@ function PlaylistList ({ onSelectPlaylist }) {
     return (
         <div className={styles.playlistListContainer}>
             <h2>Select Playlist</h2>
-            {playlists.map((playlist) => (
-                <PlaylistListItem 
+            {loading ? (
+                <div>Loading playlists...</div>
+            ) : playlists.length === 0 ? (
+                <div>No playlists found</div>
+            ) : (
+               playlists.map((playlist) => (
+                <PlaylistListItem
                 key={playlist.id}
                 id={playlist.id}
                 name={playlist.name}
                 onSelectPlaylist={onSelectPlaylist}
                 />
-            ))}
-        </div>
+            )) 
+        )}
+    </div>
     );
 }
 

@@ -5,9 +5,8 @@ function SearchBar({ onSearchSubmit, searchTerm: initialSearchTerm }) {
     const [searchTerm, setSearchTerm] = useState(initialSearchTerm || "");
 
     const handleSearchChange = (event) => {
-        const value = event.target.value;
-        setSearchTerm(value);
-    }
+        setSearchTerm(event.target.value);
+    };
 
     const handleSearchSubmit = async (event) => {
         event.preventDefault();
@@ -33,7 +32,9 @@ function SearchBar({ onSearchSubmit, searchTerm: initialSearchTerm }) {
                 value={searchTerm}
                 onChange={handleSearchChange}
                 />
-                <button className={styles.searchButton} type="submit">Search</button>
+                <button className={styles.searchButton} type="submit">
+                    Search
+                </button>
             </form>
         </div>
     );

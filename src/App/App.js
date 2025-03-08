@@ -14,9 +14,7 @@ function App() {
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [playlistId, setPlaylistId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(
-    localStorage.getItem("SearchTerm") || ""
-  );
+  const [searchTerm, setSearchTerm] = useState(localStorage.getItem("SearchTerm") || "");
 
   const onSearchResults = (searchResults) => {
     const filteredResults = searchResults.filter((track) => !playlistTracks.some((savedTrack) => savedTrack.id === track.id));
@@ -44,16 +42,23 @@ function App() {
   };
 
 const removeTrackFromPlaylist = (track) => {
-  setPlaylistTracks((prevTracks) => prevTracks.filter((t) => t.id !== track.id));
+  setPlaylistTracks((prevTracks) => 
+    prevTracks.filter((t) => t.id !== track.id)
+  );
 };
 
 const savePlaylist = async() => {
   const uris = playlistTracks.map((track) => track.uri);
+  if(!Array.isArray(playlistTracks) || playlistTracks.length === 0){
+    console.log("No valid tracks available for saving", playlistTracks);
+    return;
+  }
   setIsLoading(true);
 try {
   await Spotify.savePlaylist(playlistName, uris, playlistId);
   setPlaylistTracks([]);
   setPlaylistId(null);
+  setPlaylistName("My Playlist")
 } catch(error) {
   console.error("Error saving playlist", error);
 } finally {
@@ -65,12 +70,11 @@ const selectPlaylist = async (id) => {
   try {
   const fetchedTracks = await Spotify.getPlaylist(id);
   const playlistDetails = await Spotify.getUserPlaylists();
-  const selectedPlaylist = playlistDetails.find(
-    (playlist) => playlist.id === id
-  );
-  setPlaylistName(selectedPlaylist.name);
-  setPlaylistTracks(fetchedTracks)
-  setPlaylistId(id)
+  const selectedPlaylist = playlistDetails.find((playlist) => playlist.id === id);
+  
+  setPlaylistName(selectedPlaylist ? selectedPlaylist.name : "My Playlist");
+  setPlaylistTracks(fetchedTracks);
+  setPlaylistId(id);
   } catch(error) {
     console.error("Error selecting playlist", error);
   }
@@ -90,10 +94,14 @@ useEffect(() => {
       <header className={styles.header}></header>
       <h1 className={styles.title}>Jammming</h1>
       <div className={styles.container}>
-      <SearchBar onSearchSubmit={handleSearchSubmit} searchTerm={searchTerm}/>
+      <SearchBar onSearchSubmit={handleSearchSubmit} searchTerm={searchTerm} />
       <div className={styles.content}>
         <div className={styles.resultsColumn}>
-      <SearchResults tracks={tracks} addTrackToPlaylist={addTrackToPlaylist} />
+      <SearchResults 
+      tracks={tracks} 
+      addTrackToPlaylist={addTrackToPlaylist} 
+      removeTrackFromPlaylist={removeTrackFromPlaylist}
+      />
       </div>
 
       <div className={styles.playlistColumn}>

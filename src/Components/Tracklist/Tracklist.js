@@ -2,7 +2,7 @@ import React from "react";
 import Track from "../Track/Track.js"
 import styles from "../../css/Tracklist.module.css";
 
-function Tracklist ({ tracks, addTrackToPlaylist, removeTrackFromPlaylist }) {
+function Tracklist ({ tracks, addTrackToPlaylist, removeTrackFromPlaylist, isRemoval }) {
     return (
         <div className={styles.Tracklist}>
             {Array.isArray(tracks) && tracks.map((track) => (
@@ -16,6 +16,7 @@ function Tracklist ({ tracks, addTrackToPlaylist, removeTrackFromPlaylist }) {
                 preview_url={track.preview_url}
                 addTrackToPlaylist={addTrackToPlaylist}
                 removeTrackFromPlaylist={removeTrackFromPlaylist}
+                isRemoval={isRemoval}
                 />
             ))}
         </div>

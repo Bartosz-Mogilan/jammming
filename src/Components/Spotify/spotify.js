@@ -2,6 +2,7 @@ const clientId = "2d9c97aa165e4a2d8882120368eb04fb";
 const redirectUri = "http://localhost:3000/";
 let accessToken;
 let expiresIn;
+let userId;
 
 
 //Getting the access token from spotify
@@ -31,6 +32,9 @@ const Spotify = {
   //Getting the current User
 
   async getCurrentUserId() {
+    if(userId) {
+      return Promise.resolve(userId);
+    }
     const token = this.getAccessToken();
     console.log("Using token for getCurrentUser:", token);
 
@@ -45,17 +49,18 @@ const Spotify = {
       throw new Error("Failed to fetch ID");
     }
     const data = await response.json();
-    return data.id;
+    userId = data.id;
+    return userId;
   },
 
   //Getting User playlists 
 
   async getUserPlaylists() {
-    const userId = await this.getCurrentUserId();
+    const currentUserId = await this.getCurrentUserId();
     const token = this.getAccessToken();
-    console.log("Using toekn for getUserPlaylist:", token);
+    console.log("Using token for getUserPlaylist:", token);
 
-    const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+    const response = await fetch(`https://api.spotify.com/v1/users/${currentUserId}/playlists`, {
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -95,6 +100,7 @@ const Spotify = {
       artist: item.track.artists.map((artist) => artist.name).join(", "), 
       album: item.track.album.name,
       uri: item.track.uri,
+      preview_url: item.track.preview_url,
     }));
   },
 
@@ -114,11 +120,10 @@ const Spotify = {
     }
 
     try {
-      const userId = await this.getCurrentUserId();
+      const currentUserId = await this.getCurrentUserId();
       let playlistId = id;
-
       if (id) {
-        await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
+        const updateNameResponse = await fetch(`https://api.spotify.com/v1/playlists/${id}`, {
           method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -126,9 +131,25 @@ const Spotify = {
           },
           body: JSON.stringify({ name: playlistName }),
         });
-        playlistId = id;
+        if(!updateNameResponse.ok) {
+          console.error("Error updating playlist name", await updateNameResponse.text());
+          throw new Error("Failed to update playlist name");
+        }
+        const updateTracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ uris: trackURIs }),
+        });
+        if(!updateTracksResponse.ok) {
+          console.error("Error updating playlist tracks", await updateTracksResponse.text());
+          throw new Error("Failed to update playlist tracks");
+        }
+        alert("Playlist updated Successfully");
       } else {
-        const createPlaylistResponse = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+        const createPlaylistResponse = await fetch(`https://api.spotify.com/v1/users/${currentUserId}/playlists`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -138,29 +159,27 @@ const Spotify = {
             name: playlistName,
             public: true,
           }),
-        }
-      );
+        });
 
         if (!createPlaylistResponse.ok) {
           console.log("Error creating playlist:", await createPlaylistResponse.text());
           throw new Error("Failed to create playlist");
         }
-
         const playlistData = await createPlaylistResponse.json();
         playlistId = playlistData.id;
+
       }
 
       //Adding tracks to the playlist 
 
       const addTracksResponse = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ uris: trackURIs }),
-      }
-    );
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ uris: trackURIs }),
+        });
 
       if (!addTracksResponse.ok) {
         console.log("Error adding tracks", await addTracksResponse.text());
@@ -168,7 +187,6 @@ const Spotify = {
       }
 
       alert('Playlist saved successfully!');
-
     } catch (error) {
       console.error('Error saving playlist:', error);
       alert('Failed to save playlist. Please try again.');
@@ -190,22 +208,20 @@ const Spotify = {
         headers: { 
           Authorization: `Bearer ${token}` 
         },
+      });
+
+      if(!response.ok) {
+        console.error('Error details:', await response.text());
+        throw new Error(`Failed to fetch results ${response.statusText}`);
       }
-    );
       
       const data = await response.json();
       if(!data.tracks || !data.tracks.items) {
         console.error("No tracks found", data)
         return [];
-
       }
 
-      if (!response.ok) {
-        console.log("Error details:", await response.text());
-        throw new Error(`Failed to fetch results: ${response.statusText}`);
-      }
-
-       return data.tracks.items.map((track) => ({
+      return data.tracks.items.map((track) => ({
         id: track.id,
         name: track.name,
         artist: track.artists.map((artist) => artist.name).join(", "),

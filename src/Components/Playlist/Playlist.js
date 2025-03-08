@@ -40,7 +40,8 @@ async function handleSavePlaylist() {
         <div className={styles.playlistContainer}>
             <div className={styles.playlistBox}>
             {isEditing ? (
-                <input className={styles.playlistNameInput}
+                <input 
+                className={styles.playlistNameInput}
                 type="text"
                 value={newName}
                 onChange={handleNameChange}
@@ -49,20 +50,16 @@ async function handleSavePlaylist() {
                 autoFocus
                 />
             ) : (
-                <h2 className={styles.playlistName} onClick={() => setIsEditing(true)}>{name}</h2>
+                <h2 className={styles.playlistName} onClick={() => setIsEditing(true)}>
+                    {name}
+                </h2>
             )}
-            <Tracklist 
-            tracks={tracks}
-            removeTrackFromPlaylist={removeTrackFromPlaylist} 
-            />
+            <Tracklist tracks={tracks} removeTrackFromPlaylist={removeTrackFromPlaylist} isRemoval={true} />
             {tracks.length > 0 && (
-                <button
-                className={styles.saveButton}
-                onClick={handleSavePlaylist}
-                >Save to Spotify
+                <button className={styles.saveButton} onClick={handleSavePlaylist}>
+                    Save to Spotify
                 </button>
             )}
-            
             </div>
         </div>
     );

@@ -10,6 +10,7 @@ function SearchResults({ tracks =[], addTrackToPlaylist, removeTrackFromPlaylist
             tracks={tracks} 
             addTrackToPlaylist={addTrackToPlaylist} 
             removeTrackFromPlaylist={removeTrackFromPlaylist}
+            isRemoval={false}
             />
         </div>
     );

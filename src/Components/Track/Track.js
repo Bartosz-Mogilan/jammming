@@ -1,21 +1,24 @@
 import React from "react";
 import styles from "../../css/Track.module.css";
 
-function Track({id, name, artist, album, uri, preview_url, addTrackToPlaylist, removeTrackFromPlaylist,}) {
+function Track({id, name, artist, album, uri, preview_url, addTrackToPlaylist, removeTrackFromPlaylist, isRemoval }) {
 
 const handleAddTrack = () => {
-    if(addTrackToPlaylist) {
+    if(typeof addTrackToPlaylist === "function") {
         addTrackToPlaylist({ id, name, artist, album, uri, preview_url });
     } else {
-        console.error('addTrackToPlaylist is not a function')
+        console.error('Error adding track to playlist')
     }
 };
 
 const handleRemoveTrack = () => {
-    if (removeTrackFromPlaylist) {
-        removeTrackFromPlaylist({ id, name, artist, album, uri });
+    if (typeof removeTrackFromPlaylist === "function") {
+        removeTrackFromPlaylist({ id, name, artist, album, uri, preview_url });
+    } else {
+        console.error("Error removing track from playlist")
     }
 };
+
 
 return (
         <div className={styles.Track}>
@@ -29,7 +32,7 @@ return (
                     Your browser does not support the audio element
                 </audio>
             )}
-            {typeof removeTrackFromPlaylist === "function" ? (
+            {isRemoval ? (
                 <button className={styles.removeButton} onClick={handleRemoveTrack}>
                     Remove
                 </button>
@@ -40,7 +43,8 @@ return (
             )}
             </div>
         </div>
-        )
+    );
 }
 
 export default Track;
+
