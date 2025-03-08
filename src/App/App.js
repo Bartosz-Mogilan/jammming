@@ -90,7 +90,7 @@ useEffect(() => {
       <header className={styles.header}></header>
       <h1 className={styles.title}>Jammming</h1>
       <div className={styles.container}>
-      <SearchBar onSearchResults={handleSearchSubmit} searchTerm={searchTerm}/>
+      <SearchBar onSearchSubmit={handleSearchSubmit} searchTerm={searchTerm}/>
       <div className={styles.content}>
         <div className={styles.resultsColumn}>
       <SearchResults tracks={tracks} addTrackToPlaylist={addTrackToPlaylist} />
