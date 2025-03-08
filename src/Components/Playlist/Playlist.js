@@ -6,7 +6,6 @@ function Playlist({name, tracks, removeTrackFromPlaylist, setPlaylistName, saveP
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState(name);
 
-
     const handleNameChange = (e) => {
         setNewName(e.target.value);
     };
@@ -24,27 +23,16 @@ function Playlist({name, tracks, removeTrackFromPlaylist, setPlaylistName, saveP
     };
 
 async function handleSavePlaylist() {
-    console.log("tracks before saving", tracks);
-
     if(!Array.isArray(tracks) || tracks.length === 0) {
         console.log("No valid tracks avaiable for saving:", tracks);
         return;
     }
-    
-    const trackURIs = tracks.map(track => track.uri).filter(uri => uri);
-    if(trackURIs.length === 0) {
-        console.error("No valid track URIs found", trackURIs);
-        return;
-    }
-    console.log("Saving following tracks to spotify", trackURIs);
-
     try {
-        await savePlaylist(newName, trackURIs);
+        await savePlaylist();
         console.log("Tracks saved successfully");
-    } catch (error) {
-        console.error("Error saving playlist:", error);
-    }
-    
+    } catch(error) {
+        console.error("Error saving plylist.", error);
+    }    
 }
 
 
