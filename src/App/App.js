@@ -10,7 +10,7 @@ import PlaylistList from "../Components/PlaylistList/PlaylistList";
 
 function App() {
   const [tracks, setTracks] = useState([]);
-  const [playlistName, setPlaylistName] = useState("My Playlist");
+  const [playlistName, setPlaylistName] = useState("Add New Playlist");
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [playlistId, setPlaylistId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -58,7 +58,7 @@ try {
   await Spotify.savePlaylist(playlistName, uris, playlistId);
   setPlaylistTracks([]);
   setPlaylistId(null);
-  setPlaylistName("My Playlist")
+  setPlaylistName("Add New Playlist")
 } catch(error) {
   console.error("Error saving playlist", error);
 } finally {
@@ -72,7 +72,7 @@ const selectPlaylist = async (id) => {
   const playlistDetails = await Spotify.getUserPlaylists();
   const selectedPlaylist = playlistDetails.find((playlist) => playlist.id === id);
   
-  setPlaylistName(selectedPlaylist ? selectedPlaylist.name : "My Playlist");
+  setPlaylistName(selectedPlaylist ? selectedPlaylist.name : "Add New Playlist");
   setPlaylistTracks(fetchedTracks);
   setPlaylistId(id);
   } catch(error) {
@@ -91,10 +91,13 @@ useEffect(() => {
   return (
     <div className={styles.appContainer}>
       {isLoading && <div>Loading...</div>}
-      <header className={styles.header}></header>
+      <header className={styles.header}>
       <h1 className={styles.title}>Jammming</h1>
+      </header>
+
       <div className={styles.container}>
       <SearchBar onSearchSubmit={handleSearchSubmit} searchTerm={searchTerm} />
+
       <div className={styles.content}>
         <div className={styles.resultsColumn}>
       <SearchResults 
@@ -103,9 +106,10 @@ useEffect(() => {
       removeTrackFromPlaylist={removeTrackFromPlaylist}
       />
       </div>
-
-      <div className={styles.playlistColumn}>
-      <PlaylistList onSelectPlaylist={selectPlaylist}/>
+      <div className={styles.selectPlaylistColumn}>
+      <PlaylistList onSelectPlaylist={selectPlaylist} />
+      </div>
+      <div className={styles.myPlaylistColumn}>
       <PlayList
       name={playlistName} 
       tracks={playlistTracks} 
@@ -114,9 +118,9 @@ useEffect(() => {
       savePlaylist={savePlaylist}
       />
       </div>
-      </div>
     </div>
   </div>
+</div>
   );
 }
 

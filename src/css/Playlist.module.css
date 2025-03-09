@@ -1,39 +1,51 @@
+.playlistContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
 .playlistBox {
-    background-color: #1e1e1e;
-    border-radius: 8px;
-    padding: 20px;
-    width: 400px; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  }
-  
-  .playlistContainer {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 20px;
-  }
+  background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1));
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
 
 .playlistNameInput {
-    width: 100%;
-    border: none;
-    border-radius: 4px;
-    padding: 10px;
-    background-color: #333; 
-    color: #ffffff;
+  width: 100%;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  margin-bottom: 10px;
+  font-size: 1.1em;
 }
 
 .playlistName {
-    font-size: 1.5em;
-    cursor: pointer;
-    transition: color 0.3s ease;
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  margin-bottom: 20px;
+  color: #00e0ff;
 }
 
 .saveButton {
-    background-color: #00e0ff;
-    color: #000;
-    border: none;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 1em;
-    width: 100%;
+  background-color: #00e0ff;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 1em;
+  width: 100%;
+  margin-top: 20px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.saveButton:hover {
+  background-color: #00e0ff;
+  box-shadow: 0 0 8px #00e0ff;
 }

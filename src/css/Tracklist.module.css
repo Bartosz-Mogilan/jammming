@@ -1,22 +1,6 @@
 .Tracklist {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   width: 100%;
-}
-
-.Track {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid #444; 
-  transition: background-color 0.3s ease;
-}
-
-.Track:hover {
-  background-color: rgba(0, 224, 255, 0.1); 
-}
-
-.TrackDetails {
-  flex: 1;
 }
