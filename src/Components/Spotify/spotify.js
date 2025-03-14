@@ -4,8 +4,6 @@ let accessToken;
 let expiresIn;
 let userId;
 
-console.log(process.env.CLIENT_ID);
-console.log(process.env.REDIRECT_URL);
 //Getting the access token from spotify
 
 const Spotify = {
